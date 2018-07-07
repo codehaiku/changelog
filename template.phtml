@@ -1,0 +1,31 @@
+<ul>
+<?php foreach( $list as $milestone => $sublist): ?>
+	<li><hr>
+			<h3 class="subtitle">
+				<?php if ( $counter == 0 ) { ?>
+					Upcoming
+				<?php } ?>
+				<?php if ( $counter == 1 ) { ?>
+					Current 
+				<?php } ?>
+				Version: <?php echo $milestone; ?>
+			</h3>
+		<ul>
+			
+			<?php foreach ($sublist as $sublist ): ?>
+				<li class="list issue-list">
+				    <a href="<?php echo $sublist['url'];?>" title="<?php echo $sublist['title'] ?>">
+				    	<span class="icon has-text-success">
+							<i class="fas fa-check-square"></i>
+						</span>
+				    	<?php echo sprintf('#%d %s', $sublist['number'], $sublist['title']); ?>
+				    	
+					</a>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+		<?php $counter++; ?>
+	</li>
+
+<?php endforeach; ?>
+</ul>

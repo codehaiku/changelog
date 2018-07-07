@@ -19,3 +19,7 @@ position: absolute;
     border-radius: 3px;
     right: 0;
 }
+
+.milestone-* .milestone {
+	display: none;
+}

@@ -12,11 +12,11 @@ require_once(__DIR__ . '/vendor/autoload.php');
 require_once(__DIR__ . '/config.php');
 require_once(__DIR__ . '/cache.php');
 
-$expires = 60; //12 Hours
+$expires = 60; 
 $cache = new Dunhakdis\Changelog\Cache();
 $cacheKey = 'changelog';
 $issues = array();
-$count = 0;
+$counter = 0;
 
 if ( ! $cache->hasCache( $cacheKey ) ) {
 	// Cache is not set, let's fetch some data.
@@ -30,6 +30,8 @@ if ( ! $cache->hasCache( $cacheKey ) ) {
 } else {
 	$issues = $cache->getCache( $cacheKey );
 }
+
+$list = array();
 ?>
 <div id="wrap">
 <h1 class="title">Thrive Intranet & Community WP Theme</h1>
@@ -37,66 +39,22 @@ if ( ! $cache->hasCache( $cacheKey ) ) {
 
 <?php
 if ( ! empty ( $issues ) ) {
-	echo '<ul>';
 	foreach($issues as $issue){ ?>
-		<li class="list">
-			<?php if ( $count === 0 ) { ?>
-				<hr/>
-				<div class="updated-at">
-					Last Updated: 
-						<?php echo date_format( date_create($issue->milestone->updated_at), "M d, Y"); ?>
-				</div>
-			<?php } ?>
-			<?php if ( $count>=1) { ?>
-				<?php if ( $issues[$count-1]->milestone->title !== $issue->milestone->title ): ?>
-					<hr /><!-- separate issues by milestone-->
-					<div class="updated-at">
-						Last Updated: 
-						<?php echo date_format( date_create($issue->milestone->updated_at), "M d, Y"); ?>
-						
-					</div>
-				<?php endif; ?>
-			<?php } ?>
-
-			<div class="columns">
-				<div class="column">
-				   	<a href="<?php echo $issue->milestone->html_url; ?>">
-						<span class="milestone tag is-info">
-							Version 
-							<?php if( isset( $issue->milestone->title ) ) { ?>
-								<?php echo $issue->milestone->title; ?>
-							<?php } else { ?>
-								~
-							<?php } ?>
-						</span>
-					</a>
-				</div>
-				<div class="column is-four-fifths">
-				    <a href="<?php echo $issue->html_url;?>" title="<?php echo $issue->title; ?>">
-				    	<?php echo sprintf('#%d %s', $issue->number, $issue->title); ?>
-				    	<span class="icon has-text-success">
-  <i class="fas fa-check-square"></i>
-</span>
-						<?php if ( isset( $issue->labels ) && ! empty( $issue->labels ) ): ?>
-							<p>
-							<?php foreach ( $issue->labels as $label ): ?>
-								<span class="is-size-7" style="color: #<?php echo $label->color;?>">
-									<?php echo $label->name; ?>
-								</span>
-							<?php endforeach; ?>
-						</p>
-						<?php endif; ?>
-					</a>
-				</div>
-			</div>
-
-			<?php $count++ ;?>
-		</li>
+		<?php
+			$list[$issue->milestone->title][] = array(
+					'number' => $issue->number,
+					'title' => $issue->title,
+					'url' => $issue->html_url,
+					'updated_at' => date_format( date_create($issue->milestone->updated_at), "M d, Y"),
+					'milestone_url' => $issue->milestone->html_url
+				);
+		?>
 	<?php 
 	} 
-	echo '</ul>';
 }
+include __DIR__ . '/template.phtml';
 ?>
+
 </div><!--#wrap-->
 </body>
 </html>
