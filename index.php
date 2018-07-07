@@ -1,16 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Thrive Issues Log</title>
+</head>
+<body>
 <?php
-require_once(__DIR__ . '/config.php');
 require_once(__DIR__ . '/vendor/autoload.php');
+require_once(__DIR__ . '/config.php');
+require_once(__DIR__ . '/cache.php');
 
-$client = new GuzzleHttp\Client();
+$expires = 60; //12 Hours
+$cache = new Dunhakdis\Changelog\Cache();
+$cacheKey = 'changelog';
+$issues = array();
 
-$params = '?state=closed';
-
-$request = $client->request('GET', 'https://api.github.com/repos/codehaiku/thrive-issue-tracker/issues'. $params,[
-	'auth' => [USER, PASSWORD],
-]);
-
-$issues = json_decode( $request->getBody() );
+if ( ! $cache->hasCache( $cacheKey ) ) {
+	// Cache is not set, let's fetch some data.
+	$client = new GuzzleHttp\Client();
+	$params = '?state=closed';
+	$request = $client->request('GET', 'https://api.github.com/repos/codehaiku/thrive-issue-tracker/issues'. $params,[
+		'auth' => [USER, PASSWORD],
+	]);
+	$issues = json_decode( $request->getBody() );
+	$cache->setCache( $cacheKey, $issues, $expires );
+} else {
+	$issues = $cache->getCache( $cacheKey );
+}
 
 if ( ! empty ( $issues ) ) {
 	echo '<ul>';
@@ -24,3 +39,6 @@ if ( ! empty ( $issues ) ) {
 	} 
 	echo '</ul>';
 }
+?>
+</body>
+</html>
