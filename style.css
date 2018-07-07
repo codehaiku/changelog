@@ -1,0 +1,21 @@
+#wrap{
+	max-width: 800px;
+	margin: 0 auto;
+	display: block;
+	padding: 15px 25px;
+}
+
+.list {
+	position: relative;
+}
+.updated-at {
+position: absolute;
+    top: -12px;
+    background: #313131;
+    display: block;
+    padding: 5px 10px;
+    font-size: 12px;
+    color: #fff;
+    border-radius: 3px;
+    right: 0;
+}
