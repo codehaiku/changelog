@@ -40,8 +40,7 @@ class Cache {
 	}
 
 	public function hasCache( $key ) {
-		//$item = $this->pool->getItem($key);
-		//$item->isHit();
+	
 		return $this->pool->hasItem($key);
 	}
 
@@ -50,5 +49,9 @@ class Cache {
 		// Get stored values
 		
 		return $item->get();
+	}
+
+	public function clearCache() {
+		return $this->pool->clear();
 	}
 }

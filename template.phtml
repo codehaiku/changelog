@@ -1,12 +1,17 @@
+<?php if ( ! empty( $list ) ) { ?>
 <ul>
 <?php foreach( $list as $milestone => $sublist): ?>
 	<li><hr>
 			<h3 class="subtitle">
 				<?php if ( $counter == 0 ) { ?>
-					Upcoming
+					<?php if ( $page == 1 ) { ?>
+						Upcoming
+					<?php } ?>
 				<?php } ?>
 				<?php if ( $counter == 1 ) { ?>
-					Current 
+					<?php if ( $page == 1 ) { ?>
+						Current 
+					<?php } ?>
 				<?php } ?>
 				Version: <?php echo $milestone; ?>
 			</h3>
@@ -29,3 +34,33 @@
 
 <?php endforeach; ?>
 </ul>
+<?php } else { ?>
+<div class="notification is-primary">
+	OMG! There are no changelog found! Try again in the future <i class="fa fa-smile-wink"></i>
+</div>
+<?php } ?>
+<hr/>
+
+<nav class="pagination" role="navigation" aria-label="pagination">
+  	
+  	<?php if ( isset( $paging['prev'] ) ) {?>
+  		<a href="?page=<?php echo $paging['prev']; ?>" 
+  			class="pagination-previous" title="Go to Previous Page">Previous</a>
+  	<?php } ?>
+  	<?php if ( isset( $paging['next'] ) ) {?>
+  		<a href="?page=<?php echo $paging['next']; ?>" 
+  			class="pagination-next">Next page</a>
+  	<?php } ?>
+
+  	<?php if ( isset( $paging['last']) ) {?>
+  	<ul class="pagination-list">
+  		<?php for ( $i = 1; $i <= $paging['last']; $i++ ) {?>
+  			<li>
+	      		<a href="?page=<?php echo $i; ?>" class="<?php echo $i == $page ? 'is-current': ''; ?> pagination-link" aria-label="Goto page 2">
+	      			<?php echo $i; ?>
+	      		</a>
+	    	</li>
+  		<?php } ?>
+  	</ul>
+  	<?php } ?>
+</nav>
